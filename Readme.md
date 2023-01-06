@@ -39,6 +39,25 @@
 
 
 
+# Tomcat
+
+## 2023.1.6
+
+- Tomcat连接TCP
+  - 异步BIO+线程池获取并处理socket连接
+
+- 按Servlet规范实现Request与Response
+  - 按HTTP协议解析InputStream字节流，生成Request对象
+  - 暂存响应体，生成Response对象，并提供方法按HTTP协议构造OutputStream
+  - Tips：实现Request和Response时，需实现HttpServletRexxxx，可以借助一个抽象类默认实现HttpServletRexxxx，然后再基础该抽象类，然后重写需要的方法
+  - Servlet.server()匹配请求类型
+
+
+
+
+
+
+
 
 
 
