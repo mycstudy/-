@@ -37,8 +37,6 @@
 
 
 
-
-
 # Tomcat
 
 ## 2023.1.6
@@ -54,7 +52,17 @@
 
 
 
+# SpringBoot
 
+## 2023.1.10
+
+- SpringBoot启动模拟
+  - 多态选择WebServer（Tomcat、Jetty）
+  - 模拟WebServer自动配置类，@Bean注册所有WebServer，@Conditional注解设置生效条件，\<optional\>确定依赖传递
+  - 条件注解优化，利用AnnotatedTypeMetadata中的Attribute值
+  - 了解AutoConfigurationImportSelector.class，帮助导入所有jar包的AutoConfiguration类。由加载jar包的类加载器在META-INF/spring.factories中读取.EnableAutoConfiguration键对应的值，在selectImports()方法中返回所有的AutoConfiguration类名。（@SpringBootApplication注解下面的@EnableAutoConfiguration中的@Import(AutoConfigurationImportSelector.class)是核心）
+  - @SpringBootApplication注解下面的@SpringBootConfiguration中的@Configuration是核心
+  - @SpringBootApplication注解下面的@ComponentScan的作用是——扫描@SpringBootApplication这个注解修饰的类所在的包
 
 
 

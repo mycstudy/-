@@ -54,6 +54,13 @@
             <artifactId>tomcat-embed-core</artifactId>
             <version>9.0.60</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>11.0.13</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
 </project>

@@ -1,5 +1,6 @@
 package com.springboot;
 
+import com.springboot.webServer.WebServer;
 import org.apache.catalina.*;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.core.StandardContext;
@@ -11,6 +12,7 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.Servlet;
+import java.util.Map;
 
 public class SpringApplication {
     public static void run(Class clazz,String[] args){
@@ -19,45 +21,19 @@ public class SpringApplication {
         applicationContext.register(clazz);
         applicationContext.refresh();
 
-        //启动Tomcat
-        startTomcat(applicationContext);
+        //WebServer:多态
+        WebServer webServer=getWebServer(applicationContext);
+        webServer.start(applicationContext);
     }
 
-    private static void startTomcat(WebApplicationContext applicationContext) {
-        Tomcat tomcat=new Tomcat();
+    private static WebServer getWebServer(WebApplicationContext applicationContext) {
+        Map<String, WebServer> webServerMap = applicationContext.getBeansOfType(WebServer.class);
+        if (webServerMap.size()==0)
+            throw new NullPointerException();
+        if (webServerMap.size()>1)
+            throw new IllegalStateException();
 
-        Server server=tomcat.getServer();
-        Service service=server.findService("Tomcat");
-
-        Connector connector=new Connector();
-        connector.setPort(8081);
-
-        Engine engine=new StandardEngine();
-        engine.setDefaultHost("localhost");
-
-        Host host=new StandardHost();
-        host.setName("localhost");
-
-        String contextPath="";
-        Context context=new StandardContext();
-        context.setPath(contextPath);
-        context.addLifecycleListener(new Tomcat.FixContextListener());
-
-        host.addChild(context);
-        engine.addChild(host);
-
-        service.setContainer(engine);
-        service.addConnector(connector);
-
-        //DispatcherServlet入参接收WebApplicationContext，也就是接收一个spring容器
-        //DispatcherServlet需要寻找某个controller下的某个方法是否匹配请求，而controller是个bean
-        tomcat.addServlet(contextPath,"dispatcher", new DispatcherServlet(applicationContext));
-        context.addServletMappingDecoded("/*","dispatcher");
-
-        try {
-            tomcat.start();
-        } catch (LifecycleException e) {
-            throw new RuntimeException(e);
-        }
+        return webServerMap.values().stream().findFirst().get();
     }
+
 }
